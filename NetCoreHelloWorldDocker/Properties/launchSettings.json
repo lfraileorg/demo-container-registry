@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "NetCoreHelloWorldDocker": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
