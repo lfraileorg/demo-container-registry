@@ -2,21 +2,23 @@ name: Docker Publish
 
 on:
   workflow_dispatch:
+  push:
+    branches: [ main ]
     
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
+permissions:
+  contents: read
+  packages: write
+  id-token: write
 
 jobs:
-  build:
+  build-push-docker:
 
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
 
     steps:
       - name: Checkout repository
@@ -50,7 +52,30 @@ jobs:
           context: NetCoreHelloWorldDocker
           dockerfile: NetCoreHelloWorldDocker/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: |
+            ${{ steps.meta.outputs.tags }}
+            ${{ github.sha }}
+            latest
           labels: ${{ steps.meta.outputs.labels }}
+          
+  build-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
 
-  
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.x
+      
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: NetCoreHelloWorldDocker
+      
+      - name: Build
+        run: dotnet pack -o out/ /p:RepositoryUrl=https://github.com/${{ github.repository }}
+        working-directory: NetCoreHelloWorldDocker
+      
+      - name: publish 
+        run: dotnet nuget push out/*.nupkg --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+        working-directory: NetCoreHelloWorldDocker
