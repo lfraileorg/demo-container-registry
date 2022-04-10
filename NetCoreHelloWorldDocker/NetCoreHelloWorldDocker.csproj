@@ -6,6 +6,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+
+    <Authors>lfraileorg</Authors>
+    <Company>lfraileorg</Company>
+    <PackageDescription>Test</PackageDescription>
+    <PackageId>HelloWorldPackage</PackageId>
+    <Version>1.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
