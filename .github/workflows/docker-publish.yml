@@ -10,13 +10,14 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
-permissions:
-  contents: read
-  packages: write
-  id-token: write
+
 
 jobs:
   build-push-docker:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
 
     runs-on: ubuntu-latest
 
@@ -57,8 +58,13 @@ jobs:
             ${{ github.sha }}
             latest
           labels: ${{ steps.meta.outputs.labels }}
-          
+
   build-package:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
