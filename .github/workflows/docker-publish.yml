@@ -53,9 +53,7 @@ jobs:
           context: NetCoreHelloWorldDocker
           file: NetCoreHelloWorldDocker/Dockerfile
           push: true
-          tags: |
-            ${{ steps.meta.outputs.tags }}
-            ${{ env.IMAGE_NAME }}:latest
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           labels: ${{ steps.meta.outputs.labels }}
 
   build-package:
